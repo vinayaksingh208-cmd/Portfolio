@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vinayak Singh — CV</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#0a0a0b;--bg-2:#0f0f11;--surface:#151517;--text:#f3f1ec;
+  --muted:#8d8a85;--muted-2:#6b6964;--line:rgba(255,255,255,0.09);
+  --line-soft:rgba(255,255,255,0.05);--accent:#c6f24e;--accent-ink:#0a0a0b;--link:#7fb2ff;
+  --maxw:1080px;--pad:clamp(22px,5vw,72px);
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:"Schibsted Grotesk",system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+::selection{background:var(--accent);color:var(--accent-ink);}
+.wrap{max-width:var(--maxw);margin:0 auto;padding-inline:var(--pad);}
+.mono{font-family:"Space Mono",monospace;}
+.eyebrow{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--muted-2);}
+
+/* top bar */
+.bar{position:sticky;top:0;z-index:30;background:rgba(10,10,11,.78);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line-soft);}
+.bar-inner{display:flex;align-items:center;justify-content:space-between;height:62px;}
+.back{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;color:var(--muted);transition:color .2s;}
+.back:hover{color:var(--text);}
+.bar-actions{display:flex;gap:12px;}
+.mini{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  padding:10px 18px;border-radius:30px;border:1px solid var(--line);color:var(--text);cursor:pointer;
+  background:transparent;transition:background .2s,border-color .2s;}
+.mini.accent{border-color:rgba(198,242,78,.5);color:var(--accent);}
+.mini:hover{background:var(--surface);}
+
+/* header */
+.cv-head{padding:clamp(48px,9vh,96px) 0 30px;}
+.cv-head .eyebrow{margin-bottom:18px;display:block;}
+.cv-name{font-weight:900;letter-spacing:-.04em;line-height:.9;margin:0;
+  font-size:clamp(54px,11vw,128px);}
+.cv-name .pin{color:var(--accent);}
+.cv-role{font-weight:700;font-size:clamp(18px,2.3vw,26px);margin:18px 0 0;letter-spacing:-.01em;}
+.cv-contacts{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:20px;
+  font-family:"Space Mono",monospace;font-size:13px;color:var(--muted);}
+.cv-contacts a{color:var(--link);}
+.cv-contacts span b{color:var(--text);font-weight:700;}
+
+/* layout */
+.cv-grid{display:grid;grid-template-columns:300px 1fr;gap:clamp(30px,5vw,64px);
+  padding-bottom:90px;align-items:start;}
+.side{display:flex;flex-direction:column;gap:30px;position:sticky;top:90px;}
+.photo{border-radius:16px;overflow:hidden;border:1px solid var(--line);aspect-ratio:3/3.6;background:var(--surface);}
+.photo img{width:100%;height:100%;object-fit:cover;display:block;}
+.side-block h3{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--muted-2);margin:0 0 14px;}
+.skill-list{display:flex;flex-direction:column;gap:14px;}
+.skill .skl-top{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;}
+.skill .skl-top span:last-child{color:var(--muted);font-family:"Space Mono",monospace;font-size:11px;}
+.bar-track{height:5px;border-radius:4px;background:var(--surface);overflow:hidden;}
+.bar-fill{height:100%;background:var(--accent);border-radius:4px;}
+.tags{display:flex;flex-wrap:wrap;gap:8px;}
+.tag{font-family:"Space Mono",monospace;font-size:11.5px;border:1px solid var(--line);
+  border-radius:20px;padding:6px 12px;color:var(--muted);}
+
+/* main */
+.main-block{margin-bottom:48px;}
+.main-block > h2{font-weight:800;font-size:clamp(24px,3vw,34px);letter-spacing:-.02em;
+  margin:0 0 24px;display:flex;align-items:center;gap:14px;}
+.main-block > h2::before{content:"";width:11px;height:11px;border-radius:3px;background:var(--accent);transform:rotate(45deg);}
+.summary{font-size:18px;line-height:1.6;color:#cfccc6;margin:0;max-width:62ch;text-wrap:pretty;}
+.summary .accentword{color:var(--accent);font-weight:600;}
+
+.timeline{display:flex;flex-direction:column;}
+.entry{position:relative;padding:0 0 30px 28px;border-left:1px solid var(--line);}
+.entry:last-child{padding-bottom:0;}
+.entry::before{content:"";position:absolute;left:-6px;top:5px;width:11px;height:11px;border-radius:50%;
+  background:var(--bg);border:2px solid var(--accent);}
+.entry .role{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:baseline;}
+.entry .role h4{font-size:19px;font-weight:700;margin:0;letter-spacing:-.01em;}
+.entry .role .when{font-family:"Space Mono",monospace;font-size:12px;color:var(--muted-2);white-space:nowrap;}
+.entry .org{color:var(--accent);font-weight:600;font-size:14.5px;margin:3px 0 10px;}
+.entry ul{margin:0;padding-left:18px;color:var(--muted);font-size:14.5px;line-height:1.6;}
+.entry ul li{margin-bottom:5px;}
+.placeholder-note{font-family:"Space Mono",monospace;font-size:11px;color:var(--muted-2);
+  border:1px dashed var(--line);border-radius:8px;padding:10px 14px;margin-bottom:26px;letter-spacing:.04em;}
+
+footer{border-top:1px solid var(--line-soft);background:var(--bg-2);padding:30px 0;}
+.foot-inner{display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;
+  font-family:"Space Mono",monospace;font-size:12px;color:var(--muted-2);letter-spacing:.08em;}
+
+@media(max-width:820px){
+  .cv-grid{grid-template-columns:1fr;}
+  .side{position:static;}
+  .photo{max-width:300px;}
+}
+@media print{
+  .bar,footer,.placeholder-note{display:none;}
+  body{background:#fff;color:#111;}
+  .side{position:static;}
+}
+</style>
+</head>
+<body>
+<script src="cursor-trail.js"></script>
+<div class="bar">
+  <div class="wrap bar-inner">
+    <a class="back" href="index.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to portfolio
+    </a>
+    <div class="bar-actions">
+      <a class="mini" href="assets/Vinayak_Singh_Resume.pdf" download="Vinayak_Singh_Resume.pdf">Download PDF ↓</a>
+      <a class="mini accent" href="https://www.linkedin.com/in/vinayakksingh/" target="_blank" rel="noopener">LinkedIn ↗</a>
+    </div>
+  </div>
+</div>
+
+<header class="cv-head wrap" data-screen-label="CV Header">
+  <span class="eyebrow">Curriculum Vitae</span>
+  <h1 class="cv-name">Vinayak Singh<span class="pin">.</span></h1>
+  <p class="cv-role">Finance &amp; Strategy Analyst · Structured problem-solving for the C-suite</p>
+  <div class="cv-contacts">
+    <span><b>Based in</b> Lille / Paris, France</span>
+    <a href="tel:+33745756486">+33 7 45 75 64 86</a>
+    <a href="mailto:vinayak.singh94661@edhec.com">vinayak.singh94661@edhec.com</a>
+    <a href="https://www.linkedin.com/in/vinayakksingh/" target="_blank" rel="noopener">LinkedIn ↗</a>
+  </div>
+</header>
+
+<div class="wrap cv-grid">
+  <!-- SIDE -->
+  <aside class="side">
+    <div class="photo"><img src="assets/vinayak.jpg" alt="Vinayak Singh" /></div>
+    <div class="side-block">
+      <h3>Finance &amp; Analytics</h3>
+      <div class="tags">
+        <span class="tag">Financial Modelling</span><span class="tag">Consolidation Accounting</span>
+        <span class="tag">Break-Even Analysis</span><span class="tag">Benchmarking</span>
+        <span class="tag">Advanced Excel</span><span class="tag">Power BI</span>
+        <span class="tag">Tableau</span><span class="tag">Think-Cell</span>
+        <span class="tag">Oracle HFM</span><span class="tag">SQL</span><span class="tag">Python</span>
+      </div>
+    </div>
+    <div class="side-block">
+      <h3>Other Tools</h3>
+      <div class="tags">
+        <span class="tag">PowerPoint</span><span class="tag">Miro</span>
+        <span class="tag">Adobe Creative Cloud</span><span class="tag">Java</span>
+      </div>
+    </div>
+    <div class="side-block">
+      <h3>Strengths</h3>
+      <div class="tags">
+        <span class="tag">Strategic Decision-Making</span><span class="tag">Executive Communication</span>
+        <span class="tag">Cross-Functional Collaboration</span><span class="tag">Process Optimization</span>
+      </div>
+    </div>
+    <div class="side-block">
+      <h3>Languages</h3>
+      <div class="tags">
+        <span class="tag">English · Native</span><span class="tag">Hindi · Native</span><span class="tag">French · B2</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+    <section class="main-block" data-screen-label="Summary">
+      <h2>Profile</h2>
+      <p class="summary">Strategy analyst with <span class="accentword">4+ years</span> in structured problem-solving and executive communication across <span class="accentword">FMCG and consulting</span>. Led a strategic analysis of the €1.8T European construction sector, identifying <span class="accentword">€50B in growth opportunities</span>. Combines sharp analysis with the ability to present and persuade at the C-suite level.</p>
+    </section>
+
+    <section class="main-block" data-screen-label="Experience">
+      <h2>Experience</h2>
+      <div class="timeline">
+        <div class="entry">
+          <div class="role"><h4>Strategy Consultant</h4><span class="when">Oct 2025 — Mar 2026</span></div>
+          <div class="org">McCain · Lille, France</div>
+          <ul>
+            <li>Led a 5-person consulting engagement for McCain France, developing a strategic roadmap to transform a €300K transactional CSR partnership with NGO Lazare into a scalable, retail-driven shared-value model.</li>
+            <li>Benchmarked 16 global corporate/NGO partnerships across 5 maturity criteria, identifying a 16.8-point gap between McCain's current state and industry best practice.</li>
+            <li>Designed a retail go-to-market activation plan for retail partner Auchan — co-branded packaging, POS materials, checkout donation mechanics, and in-store experience concepts.</li>
+            <li>Delivered a 3-year phased implementation plan with a KPI governance framework spanning brand equity, retail performance, and social-impact metrics.</li>
+            <li>Applied SCQA, issue-tree decomposition, PESTEL horizon scanning, and foresight methodology grounded in academic and institutional sources.</li>
+          </ul>
+        </div>
+        <div class="entry">
+          <div class="role"><h4>Strategy &amp; Finance Analyst — CFO Office</h4><span class="when">Jan 2025 — Jul 2025</span></div>
+          <div class="org">Royal Canin (Mars Inc.) · Aimargues, France</div>
+          <ul>
+            <li>Synthesized marketing performance data across 40+ global regions (€600M) into periodic risk reports that informed senior-leadership reallocation decisions.</li>
+            <li>Built a cross-functional 'Size of Price' model enabling go/no-go decisions on new market opportunities.</li>
+            <li>Redesigned the Global Marketing dashboard — now the primary strategic decision tool for the Global Leadership Team.</li>
+            <li>Integrated multi-level views into the Financial Performance Deck, enabling self-serve strategic analysis for business stakeholders.</li>
+          </ul>
+        </div>
+        <div class="entry">
+          <div class="role"><h4>Strategy Analyst</h4><span class="when">Jul 2024 — Dec 2024</span></div>
+          <div class="org">Centre for Net Positive Business | UNESCO · Lille, France</div>
+          <ul>
+            <li>Led a 6-month strategic analysis of the €1.8T European construction sector, identifying 5 high-impact growth strategies with €50B potential.</li>
+            <li>Rebuilt the Trends 2050 data pipeline, achieving a 75% efficiency gain in reporting capability.</li>
+            <li>Drove cost negotiations delivering a 15% budget reduction and 22% efficiency improvement — 3× above industry benchmarks.</li>
+          </ul>
+        </div>
+        <div class="entry">
+          <div class="role"><h4>Senior Analyst — Financial Applications</h4><span class="when">Nov 2020 — Apr 2023</span></div>
+          <div class="org">Cognizant Technology Solutions · Pune, India</div>
+          <ul>
+            <li>Developed and maintained billing applications used by 3 million end users, ensuring system accuracy critical to revenue collection and financial operations at scale.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="main-block" data-screen-label="Education">
+      <h2>Education</h2>
+      <div class="timeline">
+        <div class="entry">
+          <div class="role"><h4>Double Masters — Grande École</h4><span class="when">2023 — 2026</span></div>
+          <div class="org">EDHEC Business School · France</div>
+          <ul>
+            <li>Master in Management &amp; MSc in Finance, Strategy &amp; Consulting.</li>
+            <li>EDHEC Dean's List — Top 10% of 800 students.</li>
+          </ul>
+        </div>
+        <div class="entry">
+          <div class="role"><h4>B.Tech — Mechanical Engineering</h4><span class="when">2016 — 2020</span></div>
+          <div class="org">Parul University · India</div>
+          <ul>
+            <li>Bachelor of Technology in Mechanical Engineering.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="main-block" data-screen-label="Achievements">
+      <h2>Achievements</h2>
+      <div class="timeline">
+        <div class="entry">
+          <div class="role"><h4>L'Oréal Brandstorm 2024 — Semifinalist</h4><span class="when">2024</span></div>
+          <div class="org">Paris</div>
+          <ul><li>Top 1% globally — 40 of 5,000 teams.</li></ul>
+        </div>
+        <div class="entry">
+          <div class="role"><h4>LVMH Open Innovation — Customer Preference Award</h4><span class="when">Paris</span></div>
+          <div class="org">LVMH</div>
+          <ul><li>Led the winning team in a music-collaboration project.</li></ul>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer>
+  <div class="wrap foot-inner">
+    <span>© 2026 · Vinayak Singh</span>
+    <span>Finance × Strategy × Data</span>
+  </div>
+</footer>
+<script>
+document.addEventListener('click',function(e){
+  const a = e.target.closest('a[target="_blank"]');
+  if(!a) return;
+  const w = window.open(a.href,'_blank','noopener');
+  if(w){ e.preventDefault(); }
+});
+</script>
+</body>
+</html>
