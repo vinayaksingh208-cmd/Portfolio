@@ -38,20 +38,21 @@ a{color:inherit;text-decoration:none;}
 .mini:hover{background:var(--surface);}
 
 /* header */
-.cv-head{padding:clamp(48px,9vh,96px) 0 30px;}
+.cv-head{padding:clamp(48px,9vh,96px) 0 0;}
 .cv-head .eyebrow{margin-bottom:18px;display:block;}
 .cv-name{font-weight:900;letter-spacing:-.04em;line-height:.9;margin:0;
   font-size:clamp(54px,11vw,128px);}
 .cv-name .pin{color:var(--accent);}
 .cv-role{font-weight:700;font-size:clamp(18px,2.3vw,26px);margin:18px 0 0;letter-spacing:-.01em;}
-.cv-contacts{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:20px;
+.cv-contacts{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:16px;
   font-family:"Space Mono",monospace;font-size:13px;color:var(--muted);}
 .cv-contacts a{color:var(--link);}
 .cv-contacts span b{color:var(--text);font-weight:700;}
+.cv-divider{border:none;border-top:1px solid var(--line);margin:28px 0 0;}
 
 /* layout */
 .cv-grid{display:grid;grid-template-columns:300px 1fr;gap:clamp(30px,5vw,64px);
-  padding-bottom:90px;align-items:start;}
+  padding-top:32px;padding-bottom:90px;align-items:start;}
 .side{display:flex;flex-direction:column;gap:30px;position:sticky;top:90px;}
 .photo{border-radius:16px;overflow:hidden;border:1px solid var(--line);aspect-ratio:3/3.6;background:var(--surface);}
 .photo img{width:100%;height:100%;object-fit:cover;display:block;}
@@ -129,6 +130,7 @@ footer{border-top:1px solid var(--line-soft);background:var(--bg-2);padding:30px
     <a href="mailto:vinayak.singh94661@edhec.com">vinayak.singh94661@edhec.com</a>
     <a href="https://www.linkedin.com/in/vinayakksingh/" target="_blank" rel="noopener">LinkedIn ↗</a>
   </div>
+  <hr class="cv-divider">
 </header>
 
 <div class="wrap cv-grid">
