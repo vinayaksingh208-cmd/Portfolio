@@ -65,7 +65,7 @@ nav .wrap{max-width:none;padding-left:var(--edge);padding-right:clamp(20px,5vw,9
 .hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;
   position:relative;padding-top:90px;padding-bottom:60px;}
 .hero-inner{width:100%;padding-left:var(--edge);padding-right:clamp(20px,5vw,90px);}
-.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:40px;align-items:center;}
 .hero-left{max-width:680px;}
 .hero-stage{position:relative;width:100%;aspect-ratio:1/1.04;}
 .hero-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
@@ -336,6 +336,7 @@ footer{border-top:1px solid var(--line-soft);background:var(--bg-2);
     border-radius:10px;background:transparent;color:var(--text);cursor:pointer;}
   .hero-grid{grid-template-columns:1fr;align-items:start;}
   .hero-stage{aspect-ratio:1/0.7;margin-top:8px;}
+  .cta-col{flex-direction:row;}
   .cta-col{flex-direction:row;flex-wrap:wrap;min-width:0;margin-top:8px;}
   .btn{flex:1;}
   .about{grid-template-columns:1fr;}
@@ -380,13 +381,13 @@ footer{border-top:1px solid var(--line-soft);background:var(--bg-2);
         <span class="m-link">Finance. Strategy. Insight.</span>
         <span class="m-pop">✦ Buckle up. You've stumbled into the world of Vinayak.</span>
       </div>
-      <div class="cta-col" style="margin-top:32px;flex-direction:row;flex-wrap:wrap;">
-        <a class="btn work" href="#work">View my work ↓</a>
-        <a class="btn cv" href="cv.html">Read my CV 💬</a>
-      </div>
     </div>
     <div class="hero-stage">
       <canvas id="heroCanvas"></canvas>
+    </div>
+    <div class="cta-col">
+      <a class="btn work" href="#work">View my work ↓</a>
+      <a class="btn cv" href="cv.html">Read my CV 💬</a>
     </div>
   </div>
   </div>
