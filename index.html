@@ -94,6 +94,7 @@ section.block{padding:clamp(70px,11vh,140px) 0;}
 .sec-head{margin-bottom:46px;}
 .sec-title{font-weight:800;letter-spacing:-.03em;font-size:clamp(38px,6vw,76px);
   line-height:.98;margin:14px 0 0;display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+.nb{display:inline-flex;align-items:center;gap:.34em;white-space:nowrap;}
 .tmark{display:inline-block;width:.5em;height:.5em;border-radius:50%;background:var(--accent);
   box-shadow:0 0 22px rgba(198,242,78,.45);align-self:flex-end;margin-bottom:.14em;}
 .rotator{color:var(--accent);transition:opacity .35s ease,transform .35s ease;display:inline-block;}
@@ -202,12 +203,21 @@ section.block{padding:clamp(70px,11vh,140px) 0;}
   display:inline-flex;align-items:center;gap:6px;}
 .card-link:hover{gap:10px;}
 
-.rail-nav{display:flex;gap:12px;margin-top:6px;}
+.rail-nav{display:none;}
 .arrow{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);
   background:transparent;color:var(--text);cursor:pointer;display:grid;place-items:center;
   transition:background .2s,border-color .2s,transform .2s;}
 .arrow:hover{background:var(--surface-2);border-color:var(--accent);transform:translateY(-2px);}
 .arrow:active{transform:scale(.94);}
+/* flanking arrows: vertically centered on the card thumbnails */
+.arrow.flank{position:absolute;top:clamp(96px,9.6vw,126px);transform:translateY(-50%);z-index:6;
+  width:50px;height:50px;background:rgba(10,10,11,.62);backdrop-filter:blur(7px);
+  box-shadow:0 10px 30px rgba(0,0,0,.45);}
+.arrow.flank.left{left:-23px;}
+.arrow.flank.right{right:-23px;}
+.arrow.flank:hover{transform:translateY(-50%) scale(1.07);background:var(--surface-2);border-color:var(--accent);}
+.arrow.flank:active{transform:translateY(-50%) scale(.95);}
+@media(max-width:720px){.arrow.flank{display:none;}}
 
 /* ---------- BRAND MARQUEE ---------- */
 .brands .sec-head{margin-bottom:42px;}
@@ -380,7 +390,7 @@ footer{border-top:1px solid var(--line-soft);background:var(--bg-2);
     <div class="cap-grid">
       <div class="cap-copy">
         <span class="eyebrow">How I think</span>
-        <h2 class="sec-title">Fluent in <span class="rotator" id="rotWord">Insight</span> <span class="tmark"></span></h2>
+        <h2 class="sec-title">Fluent in <span class="nb"><span class="rotator" id="rotWord">Insight</span><span class="tmark"></span></span></h2>
         <p class="sec-sub">I live where the spreadsheet meets the story — rigorous with the numbers, restless about what they mean. The tools change; the instinct to find the signal in the noise doesn't.</p>
         <p class="formula"><span class="hl">Clarity</span> <span class="op">=</span> (Data <span class="op">×</span> Judgement) <span class="op">÷</span> Noise</p>
       </div>
@@ -421,15 +431,13 @@ footer{border-top:1px solid var(--line-soft);background:var(--bg-2);
       <p class="sec-sub">Consulting engagements and strategy work across FMCG, luxury, and mobility — from a McCain × Lazare shared-value model to an award-winning LVMH collaboration framework.</p>
     </div>
     <div class="carousel">
+      <button class="arrow flank left" data-rail="workRail" data-dir="-1" aria-label="Previous">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
       <div class="rail" id="workRail"></div>
-      <div class="rail-nav">
-        <button class="arrow" data-rail="workRail" data-dir="-1" aria-label="Previous">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <button class="arrow" data-rail="workRail" data-dir="1" aria-label="Next">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-      </div>
+      <button class="arrow flank right" data-rail="workRail" data-dir="1" aria-label="Next">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
     </div>
   </div>
 </section>
@@ -572,13 +580,13 @@ function striped(seed){
 }
 
 const WORK = [
-  {img:'assets/projects/mccain.jpg',link:'https://docs.google.com/presentation/d/1sM2gSTMHZ75f9gnF-bMxCrPXh_AJefm7/preview',k:'Consulting · McCain × Lazare',t:'Brand–NGO Shared-Value Model',d:'Transformed a €300K transactional CSR partnership into a scalable, retail-driven shared-value model — benchmarked 16 global partnerships and built a 3-year activation roadmap with Auchan.'},
-  {img:'assets/projects/lvmh.jpg',link:'https://docs.google.com/presentation/d/10yO2d5dsXrYo1aYq25yqKnTRv8i3L_Dd/preview',k:'Consulting · LVMH',t:'MUSEACO — Brand × Artist Synergy',d:'A data-driven framework for perfect brand–artist collaborations at the intersection of music and fashion. Customer Preference Award winner at LVMH Open Innovation.'},
-  {img:'assets/projects/sophra.jpg',video:'https://drive.google.com/file/d/1ThWPk4cCwlgo6ySzgflVE5WhjNnsyXN0/preview',link:'https://docs.google.com/presentation/d/1TRzd5b0zKxXaKF4L33TaVbaGusgeypCv/preview',k:'Consulting · Sopra Steria',t:'Sustainable AI — Second Value',d:'A sustainable-AI campaign turning surplus food into a "Second Value" retail line. Backed by an AI-generated brand film — hit play to watch.'},
-  {img:'assets/projects/tata.jpg',link:'https://docs.google.com/presentation/d/18YfdsbA1kjPC-IMFvhp4iFNy0Pv1KJem/preview',k:'Strategy · Tata Group',t:'Strategy & Business Modeling',d:'A strategy and business-model teardown of the Tata Group — from JLR mobility to portfolio logic, innovation, and value creation across the conglomerate.'},
-  {img:'assets/projects/patagonia.jpg',link:'https://docs.google.com/presentation/d/1mZD1-P1s90c3wnAht-hKlvmxMiscs9Tq/preview',k:'Operations · Patagonia',t:'Supply Chain Deep-Dive',d:'Mapped the supply chain behind Patagonia\u2019s sustainability promise — sourcing, traceability, and the trade-offs of a values-led operating model.'},
-  {img:'assets/projects/foresight.jpg',link:'https://docs.google.com/presentation/d/1ouFCDpDuwU5n6h0gJJGYEEYnf9Hnvykp/preview',k:'Foresight · Strategic Design',t:'Foresight & Strategic Design',d:'Horizon-scanning and scenario work — using PESTEL, trend mapping and foresight methodology to design strategy for futures that haven\u2019t arrived yet.'},
-  {link:'https://docs.google.com/document/d/1t4bkHEEmsjR5Jf2metQb62XWXfxau3tk/preview',k:'Corporate Strategy · Written',t:'M&A and Corporate Strategy',d:'A 5,000-word M&A and corporate-strategy analysis — portfolio architecture, cost synergies, integration logic, and the financial case behind the deal.'},
+  {img:'assets/projects/mccain.jpg',link:'https://docs.google.com/presentation/d/1sM2gSTMHZ75f9gnF-bMxCrPXh_AJefm7/edit?usp=sharing',k:'Consulting · McCain × Lazare',t:'Brand–NGO Shared-Value Model',d:'Transformed a €300K transactional CSR partnership into a scalable, retail-driven shared-value model — benchmarked 16 global partnerships and built a 3-year activation roadmap with Auchan.'},
+  {img:'assets/projects/lvmh.jpg',link:'https://docs.google.com/presentation/d/10yO2d5dsXrYo1aYq25yqKnTRv8i3L_Dd/edit?usp=sharing',k:'Consulting · LVMH',t:'MUSEACO — Brand × Artist Synergy',d:'A data-driven framework for perfect brand–artist collaborations at the intersection of music and fashion. Customer Preference Award winner at LVMH Open Innovation.'},
+  {img:'assets/projects/sophra.jpg',video:'https://drive.google.com/file/d/1ThWPk4cCwlgo6ySzgflVE5WhjNnsyXN0/preview',link:'https://docs.google.com/presentation/d/1TRzd5b0zKxXaKF4L33TaVbaGusgeypCv/edit?usp=sharing',k:'Consulting · Sopra Steria',t:'Sustainable AI — Second Value',d:'A sustainable-AI campaign turning surplus food into a "Second Value" retail line. Backed by an AI-generated brand film — hit play to watch.'},
+  {img:'assets/projects/tata.jpg',link:'https://docs.google.com/presentation/d/18YfdsbA1kjPC-IMFvhp4iFNy0Pv1KJem/edit?usp=sharing',k:'Strategy · Tata Group',t:'Strategy & Business Modeling',d:'A strategy and business-model teardown of the Tata Group — from JLR mobility to portfolio logic, innovation, and value creation across the conglomerate.'},
+  {img:'assets/projects/patagonia.jpg',link:'https://docs.google.com/presentation/d/1mZD1-P1s90c3wnAht-hKlvmxMiscs9Tq/edit?usp=sharing',k:'Operations · Patagonia',t:'Supply Chain Deep-Dive',d:'Mapped the supply chain behind Patagonia\u2019s sustainability promise — sourcing, traceability, and the trade-offs of a values-led operating model.'},
+  {img:'assets/projects/foresight.jpg',link:'https://docs.google.com/presentation/d/1ouFCDpDuwU5n6h0gJJGYEEYnf9Hnvykp/edit?usp=sharing',k:'Foresight · Strategic Design',t:'Foresight & Strategic Design',d:'Horizon-scanning and scenario work — using PESTEL, trend mapping and foresight methodology to design strategy for futures that haven\u2019t arrived yet.'},
+  {link:'https://docs.google.com/document/d/1t4bkHEEmsjR5Jf2metQb62XWXfxau3tk/edit?usp=sharing',k:'Corporate Strategy · Written',t:'M&A and Corporate Strategy',d:'A 5,000-word M&A and corporate-strategy analysis — portfolio architecture, cost synergies, integration logic, and the financial case behind the deal.'},
 ];
 
 const BRANDS = [
@@ -775,14 +783,6 @@ capSection.addEventListener('mousemove',e=>{
   if(!raf) raf=requestAnimationFrame(parallaxLoop);
 });
 capSection.addEventListener('mouseleave',()=>{ tx=0; ty=0; if(!raf) raf=requestAnimationFrame(parallaxLoop); });
-
-/* ---------- EXTERNAL LINK FALLBACK (sandbox-friendly) ---------- */
-document.addEventListener('click',function(e){
-  const a = e.target.closest('a[target="_blank"]');
-  if(!a) return;
-  const w = window.open(a.href,'_blank','noopener');
-  if(w){ e.preventDefault(); }   // opened via JS; avoid double-open on live
-});
 </script>
 
 <!-- ===== Tweaks (accent) ===== -->

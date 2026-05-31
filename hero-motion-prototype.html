@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hero Motion — Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#0a0a0b;--surface:#151517;--text:#f3f1ec;--muted:#8d8a85;--muted-2:#6b6964;
+  --line:rgba(255,255,255,0.09);--accent:#c6f24e;--accent-ink:#0a0a0b;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:
+  radial-gradient(120% 90% at 80% 10%, rgba(198,242,78,.05), transparent 55%),
+  var(--bg);color:var(--text);font-family:"Schibsted Grotesk",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;min-height:100vh;}
+.shell{max-width:1180px;margin:0 auto;padding:40px clamp(20px,5vw,80px) 80px;}
+.tag{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted-2);}
+h1{font-weight:800;letter-spacing:-.02em;font-size:clamp(22px,3vw,32px);margin:10px 0 4px;}
+.sub{color:var(--muted);max-width:60ch;line-height:1.55;margin:0 0 26px;font-size:15px;}
+
+/* hero mock to show it IN CONTEXT */
+.hero-mock{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;
+  border:1px solid var(--line);border-radius:20px;padding:clamp(22px,3vw,44px);
+  background:linear-gradient(180deg, rgba(255,255,255,.015), transparent);min-height:520px;}
+.hm-name{font-weight:900;line-height:.9;letter-spacing:-.035em;font-size:clamp(40px,6vw,84px);margin:0;}
+.hm-name .pin{color:var(--accent);}
+.hm-tag{font-weight:800;letter-spacing:-.02em;max-width:16ch;margin:22px 0 0;
+  font-size:clamp(17px,1.8vw,24px);line-height:1.08;}
+.hm-meta{margin-top:18px;color:var(--muted);font-size:14px;line-height:1.7;}
+.hm-meta .pop{color:var(--accent);font-weight:700;}
+
+.stage-wrap{position:relative;width:100%;aspect-ratio:1/1.04;}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
+
+.controls{display:flex;flex-wrap:wrap;gap:22px;align-items:center;margin-top:26px;
+  border-top:1px solid var(--line);padding-top:22px;}
+.ctrl{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);
+  font-family:"Space Mono",monospace;letter-spacing:.04em;}
+.ctrl input[type=range]{accent-color:var(--accent);}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:30px;overflow:hidden;}
+.seg button{background:transparent;border:none;color:var(--muted);padding:8px 16px;cursor:pointer;
+  font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.06em;transition:background .2s,color .2s;}
+.seg button.on{background:var(--accent);color:var(--accent-ink);font-weight:700;}
+.note{margin-top:18px;font-size:13px;color:var(--muted-2);max-width:70ch;line-height:1.6;}
+@media(max-width:760px){.hero-mock{grid-template-columns:1fr;}.stage-wrap{aspect-ratio:1/1;}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <span class="tag">Prototype · Hero right-side motion</span>
+  <h1>Concept: the zig-zag “mind in motion”</h1>
+  <p class="sub">A glowing star ricochets between the ideas you work across — bouncing off each node, lighting it up, and tracing the connections. Shown inside a mock hero so you can judge it in context. Tweak the controls below.</p>
+
+  <div class="hero-mock">
+    <div>
+      <p class="hm-name">Vinayak<br/>Singh<span class="pin">.</span></p>
+      <p class="hm-tag">Numbers tell stories — I make leadership hear the right one.</p>
+      <p class="hm-meta">Strategic Finance · EDHEC<br/><span class="pop">✦ Finance. Strategy. Data.</span></p>
+    </div>
+    <div class="stage-wrap">
+      <canvas id="cv"></canvas>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="ctrl">Speed
+      <input id="speed" type="range" min="0.4" max="2.4" step="0.1" value="1.1" />
+    </div>
+    <div class="ctrl">Trail
+      <span class="seg" id="trailSeg">
+        <button data-trail="comet" class="on">Comet</button>
+        <button data-trail="line">Ricochet line</button>
+        <button data-trail="none">None</button>
+      </span>
+    </div>
+    <div class="ctrl">Connections
+      <span class="seg" id="connSeg">
+        <button data-conn="on" class="on">Show</button>
+        <button data-conn="off">Hide</button>
+      </span>
+    </div>
+  </div>
+  <p class="note">Notes: nodes drift gently; the star picks a new target on each impact, preferring a sharp change of direction so the path stays zig-zaggy. On hit, the node pulses + its label brightens. Lime accent + your type. Tell me what to change — node labels, speed, trail style, density — and I’ll drop the final version into the live hero.</p>
+</div>
+
+<script>
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+let DPR = Math.min(window.devicePixelRatio||1, 2);
+let W=0,H=0;
+
+function resize(){
+  const r = cv.getBoundingClientRect();
+  W=r.width; H=r.height;
+  cv.width = W*DPR; cv.height = H*DPR;
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  layout();
+}
+
+// concept nodes (normalized positions)
+const LABELS = [
+  {t:'Strategy', x:0.50, y:0.10},
+  {t:'Finance',  x:0.18, y:0.30},
+  {t:'Data',     x:0.83, y:0.27},
+  {t:'Valuation',x:0.30, y:0.56},
+  {t:'Modelling',x:0.74, y:0.55},
+  {t:'Risk',     x:0.15, y:0.80},
+  {t:'Cash Flow',x:0.55, y:0.86},
+  {t:'Insight',  x:0.86, y:0.80},
+];
+let nodes=[];
+function layout(){
+  nodes = LABELS.map((l,i)=>({
+    label:l.t,
+    bx:l.x*W, by:l.y*H,        // base
+    x:l.x*W, y:l.y*H,
+    phase: Math.random()*Math.PI*2,
+    amp: 5+Math.random()*5,
+    pulse:0,                    // impact pulse 0..1
+    glow:0.25,                  // label brightness
+  }));
+}
+
+// star state
+let fromI=0, toI=1, segT=0, segDur=1, trail=[];
+let opt = { speed:1.1, trail:'comet', conn:true };
+
+function pickNext(cur, prev){
+  // prefer a node that makes a sharp turn vs the incoming direction
+  const a = nodes[prev]||nodes[cur];
+  const inDir = Math.atan2(nodes[cur].y-a.y, nodes[cur].x-a.x);
+  let best=-1, bestScore=-1;
+  for(let i=0;i<nodes.length;i++){
+    if(i===cur) continue;
+    const d = Math.hypot(nodes[i].x-nodes[cur].x, nodes[i].y-nodes[cur].y);
+    const dir = Math.atan2(nodes[i].y-nodes[cur].y, nodes[i].x-nodes[cur].x);
+    let turn = Math.abs(((dir-inDir+Math.PI*3)%(Math.PI*2))-Math.PI); // 0..PI
+    const score = turn*1.0 + (d/Math.max(W,H))*0.6 + Math.random()*0.8;
+    if(score>bestScore){bestScore=score;best=i;}
+  }
+  return best;
+}
+
+let prevI=0;
+function startSeg(){
+  const dist = Math.hypot(nodes[toI].x-nodes[fromI].x, nodes[toI].y-nodes[fromI].y);
+  segDur = Math.max(0.45, dist/ (260*opt.speed) ); // seconds
+  segT=0;
+}
+
+function easeArrive(t){ // mostly linear, slight ease-out for ricochet feel
+  return 1-Math.pow(1-t, 1.8);
+}
+
+let last=performance.now();
+function frame(now){
+  const dt = Math.min(0.05,(now-last)/1000); last=now;
+  ctx.clearRect(0,0,W,H);
+
+  // drift nodes
+  const time = now/1000;
+  nodes.forEach(n=>{
+    n.x = n.bx + Math.cos(time*0.6+n.phase)*n.amp;
+    n.y = n.by + Math.sin(time*0.7+n.phase)*n.amp;
+    n.pulse = Math.max(0, n.pulse - dt*1.6);
+    n.glow = Math.max(0.22, n.glow - dt*0.9);
+  });
+
+  // connections
+  if(opt.conn){
+    ctx.lineWidth=1;
+    for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){
+      const d=Math.hypot(nodes[i].x-nodes[j].x,nodes[i].y-nodes[j].y);
+      if(d<W*0.42){
+        ctx.strokeStyle=`rgba(255,255,255,${0.05*(1-d/(W*0.42))})`;
+        ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.stroke();
+      }
+    }
+  }
+
+  // advance star
+  segT += dt/segDur;
+  if(segT>=1){
+    segT=0;
+    nodes[toI].pulse=1; nodes[toI].glow=1;     // impact
+    prevI=fromI; fromI=toI; toI=pickNext(fromI, prevI);
+    startSeg();
+  }
+  const e = easeArrive(segT);
+  const sx = nodes[fromI].x + (nodes[toI].x-nodes[fromI].x)*e;
+  const sy = nodes[fromI].y + (nodes[toI].y-nodes[fromI].y)*e;
+
+  // trail buffer
+  trail.push({x:sx,y:sy}); if(trail.length>26) trail.shift();
+
+  // draw nodes
+  nodes.forEach(n=>{
+    // impact ripple
+    if(n.pulse>0){
+      const rr = (1-n.pulse)*34+6;
+      ctx.strokeStyle=`rgba(198,242,78,${n.pulse*0.7})`;
+      ctx.lineWidth=2; ctx.beginPath(); ctx.arc(n.x,n.y,rr,0,Math.PI*2); ctx.stroke();
+    }
+    const r = 3.4 + n.pulse*3.5;
+    ctx.fillStyle = n.glow>0.7 ? 'rgba(198,242,78,1)' : 'rgba(150,150,150,0.6)';
+    ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);ctx.fill();
+    // label
+    ctx.font='600 13px "Space Mono", monospace';
+    ctx.textBaseline='middle';
+    const tx = n.x + 9;
+    ctx.fillStyle = `rgba(243,241,236,${n.glow})`;
+    if(n.glow>0.7) ctx.fillStyle='rgba(198,242,78,1)';
+    // keep labels inside
+    const w = ctx.measureText(n.label).width;
+    if(tx+w>W-4){ ctx.textAlign='right'; ctx.fillText(n.label, n.x-9, n.y); }
+    else { ctx.textAlign='left'; ctx.fillText(n.label, tx, n.y); }
+  });
+
+  // draw trail
+  if(opt.trail!=='none' && trail.length>1){
+    if(opt.trail==='comet'){
+      for(let i=1;i<trail.length;i++){
+        const a=i/trail.length;
+        ctx.strokeStyle=`rgba(198,242,78,${a*0.5})`;
+        ctx.lineWidth=a*4.5;
+        ctx.lineCap='round';
+        ctx.beginPath();ctx.moveTo(trail[i-1].x,trail[i-1].y);ctx.lineTo(trail[i].x,trail[i].y);ctx.stroke();
+      }
+    } else { // ricochet line: solid line from origin node to star
+      ctx.strokeStyle='rgba(198,242,78,0.5)';
+      ctx.lineWidth=2;ctx.setLineDash([5,6]);
+      ctx.beginPath();ctx.moveTo(nodes[fromI].x,nodes[fromI].y);ctx.lineTo(sx,sy);ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }
+
+  // draw star
+  const glowR=18;
+  const g=ctx.createRadialGradient(sx,sy,0,sx,sy,glowR);
+  g.addColorStop(0,'rgba(198,242,78,0.9)');g.addColorStop(1,'rgba(198,242,78,0)');
+  ctx.fillStyle=g;ctx.beginPath();ctx.arc(sx,sy,glowR,0,Math.PI*2);ctx.fill();
+  drawStar(sx,sy,4,7,3.2);
+
+  requestAnimationFrame(frame);
+}
+function drawStar(cx,cy,spikes,outer,inner){
+  let rot=Math.PI/2*3, x=cx,y=cy, step=Math.PI/spikes;
+  ctx.beginPath();ctx.moveTo(cx,cy-outer);
+  for(let i=0;i<spikes;i++){
+    x=cx+Math.cos(rot)*outer; y=cy+Math.sin(rot)*outer; ctx.lineTo(x,y); rot+=step;
+    x=cx+Math.cos(rot)*inner; y=cy+Math.sin(rot)*inner; ctx.lineTo(x,y); rot+=step;
+  }
+  ctx.lineTo(cx,cy-outer);ctx.closePath();
+  ctx.fillStyle='#eaffba';ctx.fill();
+}
+
+// controls
+document.getElementById('speed').addEventListener('input',e=>{opt.speed=parseFloat(e.target.value);});
+document.getElementById('trailSeg').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  opt.trail=b.dataset.trail;
+  [...e.currentTarget.children].forEach(c=>c.classList.toggle('on',c===b));
+});
+document.getElementById('connSeg').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  opt.conn=b.dataset.conn==='on';
+  [...e.currentTarget.children].forEach(c=>c.classList.toggle('on',c===b));
+});
+
+window.addEventListener('resize',resize);
+resize();
+startSeg();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
