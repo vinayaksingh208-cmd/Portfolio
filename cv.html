@@ -43,16 +43,17 @@ a{color:inherit;text-decoration:none;}
 .cv-name{font-weight:900;letter-spacing:-.04em;line-height:.9;margin:0;
   font-size:clamp(54px,11vw,128px);}
 .cv-name .pin{color:var(--accent);}
-.cv-role{font-weight:700;font-size:clamp(18px,2.3vw,26px);margin:18px 0 0;letter-spacing:-.01em;}
-.cv-contacts{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:16px;
-  font-family:"Space Mono",monospace;font-size:13px;color:var(--muted);}
-.cv-contacts a{color:var(--link);}
-.cv-contacts span b{color:var(--text);font-weight:700;}
-.cv-divider{border:none;border-top:1px solid var(--line);margin:28px 0 0;}
+.cv-divider{border:none;border-top:1px solid var(--line);margin:24px 0 0;}
 
 /* layout */
 .cv-grid{display:grid;grid-template-columns:300px 1fr;gap:clamp(30px,5vw,64px);
   padding-top:32px;padding-bottom:90px;align-items:start;}
+.cv-intro{margin-bottom:36px;}
+.cv-role{font-weight:700;font-size:clamp(18px,2.3vw,26px);margin:0 0 14px;letter-spacing:-.01em;}
+.cv-contacts{display:flex;flex-wrap:wrap;gap:10px 22px;
+  font-family:"Space Mono",monospace;font-size:13px;color:var(--muted);}
+.cv-contacts a{color:var(--link);}
+.cv-contacts span b{color:var(--text);font-weight:700;}
 .side{display:flex;flex-direction:column;gap:30px;position:sticky;top:90px;}
 .photo{border-radius:16px;overflow:hidden;border:1px solid var(--line);aspect-ratio:3/3.6;background:var(--surface);}
 .photo img{width:100%;height:100%;object-fit:cover;display:block;}
@@ -123,13 +124,6 @@ footer{border-top:1px solid var(--line-soft);background:var(--bg-2);padding:30px
 <header class="cv-head wrap" data-screen-label="CV Header">
   <span class="eyebrow">Curriculum Vitae</span>
   <h1 class="cv-name">Vinayak Singh<span class="pin">.</span></h1>
-  <p class="cv-role">Finance &amp; Strategy Analyst · Structured problem-solving for the C-suite</p>
-  <div class="cv-contacts">
-    <span><b>Based in</b> Lille / Paris, France</span>
-    <a href="tel:+33745756486">+33 7 45 75 64 86</a>
-    <a href="mailto:vinayak.singh94661@edhec.com">vinayak.singh94661@edhec.com</a>
-    <a href="https://www.linkedin.com/in/vinayakksingh/" target="_blank" rel="noopener">LinkedIn ↗</a>
-  </div>
   <hr class="cv-divider">
 </header>
 
@@ -171,6 +165,15 @@ footer{border-top:1px solid var(--line-soft);background:var(--bg-2);padding:30px
 
   <!-- MAIN -->
   <main>
+    <div class="cv-intro">
+      <p class="cv-role">Finance &amp; Strategy Analyst · Structured problem-solving for the C-suite</p>
+      <div class="cv-contacts">
+        <span><b>Based in</b> Lille / Paris, France</span>
+        <a href="tel:+33745756486">+33 7 45 75 64 86</a>
+        <a href="mailto:vinayak.singh94661@edhec.com">vinayak.singh94661@edhec.com</a>
+        <a href="https://www.linkedin.com/in/vinayakksingh/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      </div>
+    </div>
     <section class="main-block" data-screen-label="Summary">
       <h2>Profile</h2>
       <p class="summary">Strategy analyst with <span class="accentword">4+ years</span> in structured problem-solving and executive communication across <span class="accentword">FMCG and consulting</span>. Led a strategic analysis of the €1.8T European construction sector, identifying <span class="accentword">€50B in growth opportunities</span>. Combines sharp analysis with the ability to present and persuade at the C-suite level.</p>
