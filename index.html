@@ -581,7 +581,7 @@ function striped(seed){
 
 const WORK = [
   {img:'assets/projects/mccain.jpg',link:'case-studies/Consulting with McCain X lazare PPT.pdf',k:'Consulting · McCain × Lazare',t:'Brand–NGO Shared-Value Model',d:'Transformed a €300K transactional CSR partnership into a scalable, retail-driven shared-value model — benchmarked 16 global partnerships and built a 3-year activation roadmap with Auchan.'},
-  {img:'assets/projects/lvmh.jpg',imgPos:'top',link:'case-studies/Consulting with LVMH.pdf',k:'Consulting · LVMH',t:'MUSEACO — Brand × Artist Synergy',d:'A data-driven framework for perfect brand–artist collaborations at the intersection of music and fashion. Customer Preference Award winner at LVMH Open Innovation.'},
+  {img:'assets/projects/lvmh.jpg',imgPos:'top',imgScale:'0.92',link:'case-studies/Consulting with LVMH.pdf',k:'Consulting · LVMH',t:'MUSEACO — Brand × Artist Synergy',d:'A data-driven framework for perfect brand–artist collaborations at the intersection of music and fashion. Customer Preference Award winner at LVMH Open Innovation.'},
   {img:'assets/projects/sophra.jpg',video:'https://drive.google.com/file/d/1ThWPk4cCwlgo6ySzgflVE5WhjNnsyXN0/preview',link:'case-studies/Consulting with Sophra Steria.pdf',k:'Consulting · Sopra Steria',t:'Sustainable AI — Second Value',d:'A sustainable-AI campaign turning surplus food into a "Second Value" retail line. Backed by an AI-generated brand film — hit play to watch.'},
   {img:'assets/projects/tata.jpg',link:'case-studies/Tata_Strategy&Business.pdf',k:'Strategy · Tata Group',t:'Strategy & Business Modeling',d:'A strategy and business-model teardown of the Tata Group — from JLR mobility to portfolio logic, innovation, and value creation across the conglomerate.'},
   {img:'assets/projects/patagonia.jpg',link:'case-studies/Patagonia.pdf',k:'Operations · Patagonia',t:'Supply Chain Deep-Dive',d:'Mapped the supply chain behind Patagonia\u2019s sustainability promise — sourcing, traceability, and the trade-offs of a values-led operating model.'},
@@ -606,7 +606,7 @@ function workThumb(item,i){
     if(item.video){
       return `<div class="thumb"><img src="${item.img}" alt="${item.t}" loading="lazy"/>${badge}${play}</div>`;
     }
-    return `<a class="thumb thumb-link" href="${item.link}" target="_blank" rel="noopener"><img src="${item.img}" alt="${item.t}" loading="lazy" style="${item.imgPos?`object-position:${item.imgPos}`:''}"/><span class="open-hint"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M9 7h8v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>`;
+    return `<a class="thumb thumb-link" href="${item.link}" target="_blank" rel="noopener"><img src="${item.img}" alt="${item.t}" loading="lazy" style="${[item.imgPos?`object-position:${item.imgPos}`:'',item.imgScale?`transform:scale(${item.imgScale})`:''].filter(Boolean).join(';')}"/><span class="open-hint"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M9 7h8v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>`;
   }
   // text-led card (written analysis) — opens the doc
   return `<a class="thumb thumb-text thumb-link" href="${item.link}" target="_blank" rel="noopener">
