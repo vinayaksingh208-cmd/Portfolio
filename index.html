@@ -876,7 +876,7 @@ ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<TweakApp/>);
     const inDir=Math.atan2(nodes[cur].y-a.y,nodes[cur].x-a.x);
     let best=-1,bestScore=-1;
     for(let i=0;i<nodes.length;i++){
-      if(i===cur)continue;
+      if(i===cur||i===prev)continue;
       const d=Math.hypot(nodes[i].x-nodes[cur].x,nodes[i].y-nodes[cur].y);
       const dir=Math.atan2(nodes[i].y-nodes[cur].y,nodes[i].x-nodes[cur].x);
       const turn=Math.abs(((dir-inDir+Math.PI*3)%(Math.PI*2))-Math.PI);
@@ -888,7 +888,7 @@ ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<TweakApp/>);
 
   function startSeg(){
     const dist=Math.hypot(nodes[toI].x-nodes[fromI].x,nodes[toI].y-nodes[fromI].y);
-    segDur=Math.max(0.45,dist/286);
+    segDur=Math.max(0.7,dist/160);
     segT=0;
   }
 
