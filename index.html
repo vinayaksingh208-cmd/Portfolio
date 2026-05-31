@@ -64,8 +64,10 @@ nav .wrap{max-width:none;padding-left:var(--edge);padding-right:clamp(20px,5vw,9
 .hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;
   position:relative;padding-top:90px;padding-bottom:60px;}
 .hero-inner{width:100%;padding-left:var(--edge);padding-right:clamp(20px,5vw,90px);}
-.hero-grid{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end;}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;}
 .hero-left{max-width:680px;}
+.hero-stage{position:relative;width:100%;aspect-ratio:1/1.04;}
+.hero-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
 .hero-name{font-weight:900;line-height:.9;letter-spacing:-.035em;margin:0;
   font-size:clamp(48px,7.2vw,112px);}
 .hero-name .ln{display:block;}
@@ -331,6 +333,7 @@ footer{border-top:1px solid var(--line-soft);background:var(--bg-2);
   .nav-toggle{display:grid;place-items:center;width:42px;height:42px;border:1px solid var(--line);
     border-radius:10px;background:transparent;color:var(--text);cursor:pointer;}
   .hero-grid{grid-template-columns:1fr;align-items:start;}
+  .hero-stage{aspect-ratio:1/0.7;margin-top:8px;}
   .cta-col{flex-direction:row;flex-wrap:wrap;min-width:0;margin-top:8px;}
   .btn{flex:1;}
   .about{grid-template-columns:1fr;}
@@ -375,10 +378,13 @@ footer{border-top:1px solid var(--line-soft);background:var(--bg-2);
         <span class="m-link">Finance. Strategy. Data.</span>
         <span class="m-pop">✦ Buckle up — you've stumbled into the world of Vinayak.</span>
       </div>
+      <div class="cta-col" style="margin-top:32px;flex-direction:row;flex-wrap:wrap;">
+        <a class="btn work" href="#work">View my work ↓</a>
+        <a class="btn cv" href="cv.html">Read my CV 💬</a>
+      </div>
     </div>
-    <div class="cta-col">
-      <a class="btn work" href="#work">View my work ↓</a>
-      <a class="btn cv" href="cv.html">Read my CV 💬</a>
+    <div class="hero-stage">
+      <canvas id="heroCanvas"></canvas>
     </div>
   </div>
   </div>
@@ -822,6 +828,159 @@ function TweakApp(){
   );
 }
 ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<TweakApp/>);
+</script>
+
+<script>
+/* ---------- HERO CANVAS — mind in motion ---------- */
+(function(){
+  const cv = document.getElementById('heroCanvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  let DPR = Math.min(window.devicePixelRatio||1,2);
+  let W=0,H=0;
+
+  const LABELS=[
+    {t:'Strategy',  x:0.50,y:0.10},
+    {t:'Finance',   x:0.18,y:0.30},
+    {t:'Data',      x:0.83,y:0.27},
+    {t:'Valuation', x:0.30,y:0.56},
+    {t:'Modelling', x:0.74,y:0.55},
+    {t:'Risk',      x:0.15,y:0.80},
+    {t:'Cash Flow', x:0.55,y:0.86},
+    {t:'Insight',   x:0.86,y:0.80},
+  ];
+  let nodes=[];
+
+  function layout(){
+    nodes=LABELS.map(l=>({
+      label:l.t, bx:l.x*W, by:l.y*H,
+      x:l.x*W, y:l.y*H,
+      phase:Math.random()*Math.PI*2,
+      amp:5+Math.random()*5,
+      pulse:0, glow:0.25,
+    }));
+  }
+
+  function resize(){
+    const r=cv.getBoundingClientRect();
+    W=r.width; H=r.height;
+    cv.width=W*DPR; cv.height=H*DPR;
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    layout();
+  }
+
+  let fromI=0,toI=1,segT=0,segDur=1,trail=[],prevI=0;
+
+  function pickNext(cur,prev){
+    const a=nodes[prev]||nodes[cur];
+    const inDir=Math.atan2(nodes[cur].y-a.y,nodes[cur].x-a.x);
+    let best=-1,bestScore=-1;
+    for(let i=0;i<nodes.length;i++){
+      if(i===cur)continue;
+      const d=Math.hypot(nodes[i].x-nodes[cur].x,nodes[i].y-nodes[cur].y);
+      const dir=Math.atan2(nodes[i].y-nodes[cur].y,nodes[i].x-nodes[cur].x);
+      const turn=Math.abs(((dir-inDir+Math.PI*3)%(Math.PI*2))-Math.PI);
+      const score=turn+(d/Math.max(W,H))*0.6+Math.random()*0.8;
+      if(score>bestScore){bestScore=score;best=i;}
+    }
+    return best;
+  }
+
+  function startSeg(){
+    const dist=Math.hypot(nodes[toI].x-nodes[fromI].x,nodes[toI].y-nodes[fromI].y);
+    segDur=Math.max(0.45,dist/286);
+    segT=0;
+  }
+
+  function easeArrive(t){return 1-Math.pow(1-t,1.8);}
+
+  function drawStar(cx,cy,spikes,outer,inner){
+    let rot=Math.PI/2*3,x,y,step=Math.PI/spikes;
+    ctx.beginPath();ctx.moveTo(cx,cy-outer);
+    for(let i=0;i<spikes;i++){
+      x=cx+Math.cos(rot)*outer;y=cy+Math.sin(rot)*outer;ctx.lineTo(x,y);rot+=step;
+      x=cx+Math.cos(rot)*inner;y=cy+Math.sin(rot)*inner;ctx.lineTo(x,y);rot+=step;
+    }
+    ctx.lineTo(cx,cy-outer);ctx.closePath();
+    ctx.fillStyle='#eaffba';ctx.fill();
+  }
+
+  let last=performance.now();
+  function frame(now){
+    const dt=Math.min(0.05,(now-last)/1000);last=now;
+    ctx.clearRect(0,0,W,H);
+    const time=now/1000;
+
+    nodes.forEach(n=>{
+      n.x=n.bx+Math.cos(time*0.6+n.phase)*n.amp;
+      n.y=n.by+Math.sin(time*0.7+n.phase)*n.amp;
+      n.pulse=Math.max(0,n.pulse-dt*1.6);
+      n.glow=Math.max(0.22,n.glow-dt*0.9);
+    });
+
+    // connections
+    ctx.lineWidth=1;
+    for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){
+      const d=Math.hypot(nodes[i].x-nodes[j].x,nodes[i].y-nodes[j].y);
+      if(d<W*0.52){
+        ctx.strokeStyle=`rgba(255,255,255,${0.05*(1-d/(W*0.52))})`;
+        ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.stroke();
+      }
+    }
+
+    // advance star
+    segT+=dt/segDur;
+    if(segT>=1){
+      segT=0;
+      nodes[toI].pulse=1;nodes[toI].glow=1;
+      prevI=fromI;fromI=toI;toI=pickNext(fromI,prevI);
+      startSeg();
+    }
+    const e=easeArrive(segT);
+    const sx=nodes[fromI].x+(nodes[toI].x-nodes[fromI].x)*e;
+    const sy=nodes[fromI].y+(nodes[toI].y-nodes[fromI].y)*e;
+
+    trail.push({x:sx,y:sy});if(trail.length>26)trail.shift();
+
+    // draw nodes
+    nodes.forEach(n=>{
+      if(n.pulse>0){
+        ctx.strokeStyle=`rgba(198,242,78,${n.pulse*0.7})`;
+        ctx.lineWidth=2;ctx.beginPath();ctx.arc(n.x,n.y,(1-n.pulse)*34+6,0,Math.PI*2);ctx.stroke();
+      }
+      ctx.fillStyle=n.glow>0.7?'rgba(198,242,78,1)':'rgba(150,150,150,0.6)';
+      ctx.beginPath();ctx.arc(n.x,n.y,3.4+n.pulse*3.5,0,Math.PI*2);ctx.fill();
+      ctx.font='600 13px "Space Mono",monospace';
+      ctx.textBaseline='middle';
+      const w=ctx.measureText(n.label).width;
+      const tx=n.x+9;
+      ctx.fillStyle=n.glow>0.7?'rgba(198,242,78,1)':`rgba(243,241,236,${n.glow})`;
+      if(tx+w>W-4){ctx.textAlign='right';ctx.fillText(n.label,n.x-9,n.y);}
+      else{ctx.textAlign='left';ctx.fillText(n.label,tx,n.y);}
+    });
+
+    // comet trail
+    for(let i=1;i<trail.length;i++){
+      const a=i/trail.length;
+      ctx.strokeStyle=`rgba(198,242,78,${a*0.5})`;
+      ctx.lineWidth=a*4.5;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(trail[i-1].x,trail[i-1].y);ctx.lineTo(trail[i].x,trail[i].y);ctx.stroke();
+    }
+
+    // star glow + shape
+    const g=ctx.createRadialGradient(sx,sy,0,sx,sy,18);
+    g.addColorStop(0,'rgba(198,242,78,0.9)');g.addColorStop(1,'rgba(198,242,78,0)');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(sx,sy,18,0,Math.PI*2);ctx.fill();
+    drawStar(sx,sy,4,7,3.2);
+
+    requestAnimationFrame(frame);
+  }
+
+  window.addEventListener('resize',resize);
+  resize();
+  startSeg();
+  requestAnimationFrame(frame);
+})();
 </script>
 
 <template id="__bundler_thumbnail">
