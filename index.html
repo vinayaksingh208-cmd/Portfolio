@@ -915,8 +915,8 @@ ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<TweakApp/>);
     nodes.forEach(n=>{
       n.x=n.bx+Math.cos(time*0.6+n.phase)*n.amp;
       n.y=n.by+Math.sin(time*0.7+n.phase)*n.amp;
-      n.pulse=Math.max(0,n.pulse-dt*1.6);
-      n.glow=Math.max(0.22,n.glow-dt*0.9);
+      n.pulse=Math.max(0,n.pulse-dt*0.8);
+      n.glow=Math.max(0.22,n.glow-dt*0.22);
     });
 
     // connections
