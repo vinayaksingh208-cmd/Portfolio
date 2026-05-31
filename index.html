@@ -889,7 +889,7 @@ ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<TweakApp/>);
 
   function startSeg(){
     const dist=Math.hypot(nodes[toI].x-nodes[fromI].x,nodes[toI].y-nodes[fromI].y);
-    segDur=Math.max(0.7,dist/160);
+    segDur=Math.max(1.2,dist/100);
     segT=0;
   }
 
